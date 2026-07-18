@@ -215,37 +215,7 @@ Atualização automática a cada 2 segundos.
 
 ---
 
-# 📷 Demonstração
 
-## Dashboard
-
-> *(Adicionar imagem)*
-
-```
-images/dashboard.png
-```
-
----
-
-## Circuito
-
-> *(Adicionar foto da montagem)*
-
-```
-images/circuito.jpg
-```
-
----
-
-## ESP32
-
-> *(Adicionar foto da placa)*
-
-```
-images/esp32.jpg
-```
-
----
 
 # 📂 Estrutura do projeto
 
