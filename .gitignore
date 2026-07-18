@@ -1,0 +1,22 @@
+# Credenciais locais
+secrets.h
+**/secrets.h
+
+# Arquivos temporários
+*.tmp
+*.log
+*.bak
+
+# Sistemas operacionais
+.DS_Store
+Thumbs.db
+
+# Editores
+.vscode/
+.idea/
+
+# Arduino
+build/
+*.bin
+*.elf
+*.map
