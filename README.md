@@ -1,6 +1,6 @@
 # 🌿 Monitor Ambiental IoT com ESP32
 
-> Sistema inteligente de monitoramento ambiental desenvolvido com ESP32, sensores, Wi-Fi, API REST, Supabase e Dashboard Web em tempo real.
+> Sistema inteligente de monitoramento ambiental desenvolvido com ESP32, sensores, Dashboard Web, API REST e integração com Supabase.
 
 ![ESP32](https://img.shields.io/badge/ESP32-IoT-blue)
 ![Arduino](https://img.shields.io/badge/Arduino-C++-00979D)
@@ -9,16 +9,10 @@
 ![Status](https://img.shields.io/badge/Status-Concluído-success)
 
 ---
-DHT sensor library — Adafruit
-Adafruit Unified Sensor
-WiFi — incluída no pacote ESP32
-WebServer — incluída no pacote ESP32
-HTTPClient — incluída no pacote ESP32
-WiFiClientSecure — incluída no pacote ESP32
 
 # 📖 Sobre o projeto
 
-Este projeto consiste em um sistema completo de monitoramento ambiental utilizando Internet das Coisas (IoT). O ESP32 realiza a leitura contínua de sensores de temperatura, umidade e luminosidade, classifica automaticamente o estado do ambiente, controla indicadores visuais através de LEDs, disponibiliza uma API REST local, exibe um dashboard web em tempo real e envia periodicamente todas as leituras para um banco de dados PostgreSQL hospedado no Supabase.
+Este projeto consiste em um sistema completo de monitoramento ambiental utilizando Internet das Coisas (IoT). O ESP32 realiza a leitura contínua de sensores de temperatura, umidade e luminosidade, classifica automaticamente o estado do ambiente, controla indicadores visuais por meio de LEDs, disponibiliza uma API REST local, exibe um Dashboard Web em tempo real e envia periodicamente todas as leituras para um banco de dados PostgreSQL hospedado no Supabase.
 
 O objetivo foi desenvolver uma solução próxima de um cenário real de IoT, integrando hardware, firmware, comunicação em rede, APIs REST, banco de dados em nuvem e interface web.
 
@@ -29,14 +23,14 @@ O objetivo foi desenvolver uma solução próxima de um cenário real de IoT, in
 - ✅ Leitura de temperatura e umidade (DHT11)
 - ✅ Leitura de luminosidade (LDR)
 - ✅ Classificação automática do ambiente
-- ✅ Controle de LEDs por nível de alerta
-- ✅ Reconhecimento manual do alerta através de botão
+- ✅ Controle de LEDs conforme o estado do ambiente
+- ✅ Reconhecimento manual de condições de Atenção e Alerta através de botão físico
 - ✅ Dashboard Web em tempo real
 - ✅ API REST local
 - ✅ Comunicação Wi-Fi
 - ✅ Integração com Supabase
 - ✅ Banco de dados PostgreSQL
-- ✅ Histórico das leituras na nuvem
+- ✅ Histórico das leituras em nuvem
 
 ---
 
@@ -47,7 +41,9 @@ O objetivo foi desenvolver uma solução próxima de um cenário real de IoT, in
 - ESP32 DevKit
 - Sensor DHT11
 - Sensor LDR
-- LEDs
+- LED Verde
+- LED Azul
+- LED Vermelho
 - Botão
 - Protoboard
 - Resistores
@@ -61,11 +57,23 @@ O objetivo foi desenvolver uma solução próxima de um cenário real de IoT, in
 - CSS
 - JavaScript
 - JSON
-- REST API
 - HTTP
+- HTTPS
+- REST API
 - Wi-Fi
 - PostgreSQL
 - Supabase
+
+---
+
+# 📚 Bibliotecas utilizadas
+
+- DHT Sensor Library — Adafruit
+- Adafruit Unified Sensor
+- WiFi (ESP32)
+- WebServer (ESP32)
+- HTTPClient (ESP32)
+- WiFiClientSecure (ESP32)
 
 ---
 
@@ -75,48 +83,47 @@ O objetivo foi desenvolver uma solução próxima de um cenário real de IoT, in
                    DHT11
                       │
                       ▼
-                 Temperatura
-                 Umidade
+            Temperatura / Umidade
                       │
 
 LDR ───────────────► ESP32 ◄──────────── Botão
                       │
                       │
-                 Controle LEDs
+                Controle dos LEDs
                       │
                       ▼
-              Dashboard Local
+                Dashboard Web
                       │
                       ▼
-                 API REST Local
+              API REST (/dados)
                       │
-                  Wi-Fi
-                      │
-                      ▼
-          Supabase REST API
+                   Wi-Fi
                       │
                       ▼
-          PostgreSQL Database
+              Supabase REST API
                       │
                       ▼
-            Histórico das Leituras
+                PostgreSQL
+                      │
+                      ▼
+          Histórico das Leituras
 ```
 
 ---
 
 # 🌡 Classificação do ambiente
 
-## Status NORMAL
+## 🟢 Normal
 
-- Temperatura ≤ 28°C
+- Temperatura ≤ 28 °C
 - Umidade ≤ 75%
 - LED Verde ligado
 
 ---
 
-## Status ATENÇÃO
+## 🔵 Atenção
 
-- Temperatura > 28°C
+- Temperatura > 28 °C
 - ou
 - Umidade > 75%
 
@@ -124,9 +131,9 @@ LED Azul ligado.
 
 ---
 
-## Status ALERTA
+## 🔴 Alerta
 
-- Temperatura > 30°C
+- Temperatura > 30 °C
 - ou
 - Umidade > 85%
 
@@ -139,47 +146,47 @@ LED Vermelho ligado.
 | Faixa | Classificação |
 |--------|---------------|
 | ≤ 2300 | Muito Claro |
-| 2301–3300 | Normal |
-| >3300 | Escuro |
+| 2301 – 3300 | Normal |
+| > 3300 | Escuro |
 
 ---
 
 # 🌐 API REST
 
-## Página principal
+## Dashboard
 
-```
+```http
 GET /
 ```
 
-Retorna o dashboard web.
+Retorna o Dashboard Web.
 
 ---
 
-## Dados dos sensores
+## Dados em tempo real
 
-```
+```http
 GET /dados
 ```
 
-Exemplo:
+Exemplo de resposta:
 
 ```json
 {
-    "temperatura":28.8,
-    "umidade":67.2,
-    "luminosidade":2869,
-    "nivel_luz":"NORMAL",
-    "status":"ATENCAO",
-    "alerta_reconhecido":false
+  "temperatura": 28.8,
+  "umidade": 67.2,
+  "luminosidade": 2869,
+  "nivel_luz": "NORMAL",
+  "status": "ATENCAO",
+  "alerta_reconhecido": false
 }
 ```
 
 ---
 
-# ☁ Banco de Dados
+# ☁ Banco de dados
 
-Os dados são enviados automaticamente para o Supabase utilizando HTTPS.
+As leituras são enviadas automaticamente para o Supabase utilizando comunicação HTTPS.
 
 Tabela:
 
@@ -200,44 +207,55 @@ Campos armazenados:
 
 ---
 
-# 📊 Dashboard
+# 📊 Dashboard Web
 
-O dashboard apresenta em tempo real:
+O Dashboard apresenta em tempo real:
 
 - Temperatura
 - Umidade
 - Luminosidade
 - Nível de luz
 - Status ambiental
-- Alerta reconhecido
+- Reconhecimento da condição
 
 Atualização automática a cada 2 segundos.
 
 ---
 
+# ▶ Como executar
 
+1. Instale a Arduino IDE.
+2. Instale o suporte para placas ESP32.
+3. Instale as bibliotecas utilizadas.
+4. Crie um arquivo `secrets.h` contendo as credenciais do Wi-Fi e do Supabase.
+5. Compile o projeto.
+6. Faça o upload para o ESP32.
+7. Abra o Monitor Serial para visualizar o endereço IP.
+8. Acesse o Dashboard pelo navegador utilizando o IP exibido.
+
+---
 
 # 📂 Estrutura do projeto
 
-```
-monitor-ambiental-iot-esp32
+```text
+monitor-ambiental-iot
 
 │
-
-├── codigo/
-│      monitor_ambiental.ino
-│
-├── images/
-│      dashboard.png
-│      circuito.jpg
-│      esp32.jpg
+├── firmware/
+│   └── monitor_ambiental/
+│       ├── monitor_ambiental.ino
+│       └── secrets.example.h
 │
 ├── docs/
-│      arquitetura.png
+│   └── Monitor_Ambiental_IoT.pdf
 │
-├── README.md
+├── images/
+│   ├── circuito.jpg
+│   └── dashboard.png
 │
-└── LICENSE
+├── .gitignore
+├── LICENSE
+└── README.md
 ```
 
 ---
@@ -247,24 +265,36 @@ monitor-ambiental-iot-esp32
 Durante o desenvolvimento deste projeto foram aplicados conceitos de:
 
 - Sistemas Embarcados
-- Internet das Coisas
-- Comunicação HTTP
-- REST API
+- Internet das Coisas (IoT)
+- Comunicação HTTP e HTTPS
+- APIs REST
 - JSON
 - Wi-Fi com ESP32
 - Banco de Dados PostgreSQL
 - Supabase
-- Segurança com Row Level Security (RLS)
+- Row Level Security (RLS)
 - Desenvolvimento Web
-- Integração Hardware + Software
+- Integração entre hardware e software
+
+---
+
+# ✅ Resultado
+
+O projeto foi capaz de:
+
+- Monitorar temperatura, umidade e luminosidade em tempo real.
+- Classificar automaticamente as condições ambientais.
+- Exibir as informações em um Dashboard Web local.
+- Disponibilizar uma API REST em formato JSON.
+- Armazenar periodicamente as leituras em um banco PostgreSQL no Supabase.
 
 ---
 
 # 🔒 Segurança
 
-As credenciais do Wi-Fi e da API foram removidas da versão pública do projeto.
+As credenciais do Wi-Fi e do Supabase foram removidas da versão pública deste repositório.
 
-Para utilizar este projeto, configure:
+Para executar o projeto, crie um arquivo `secrets.h` contendo:
 
 ```cpp
 const char* WIFI_NOME;
@@ -278,20 +308,22 @@ const char* SUPABASE_KEY;
 
 # 👩‍💻 Autora
 
-**Brena Vitória Lemos**
+**Brena Vitória Aguiar Lemos**
 
 Estudante de Ciência da Computação — Universidade de Fortaleza (UNIFOR)
 
-GitHub:
+**GitHub**
+
 https://github.com/brenalemos09
 
-LinkedIn:
+**LinkedIn**
+
 https://www.linkedin.com/in/brenavitorialemos
 
 ---
 
 # ⭐ Considerações finais
 
-Este projeto foi desenvolvido como parte de um desafio técnico voltado para Internet das Coisas (IoT), buscando demonstrar conhecimentos em programação embarcada, integração com serviços em nuvem, desenvolvimento de APIs REST, armazenamento de dados e construção de interfaces web para monitoramento em tempo real.
+Este projeto foi desenvolvido como parte de um desafio técnico voltado à área de Internet das Coisas (IoT), buscando demonstrar conhecimentos em programação embarcada, integração com serviços em nuvem, desenvolvimento de APIs REST, armazenamento de dados e construção de interfaces web para monitoramento em tempo real.
 
-Além da implementação funcional, o foco também esteve na organização do código, documentação e adoção de boas práticas de desenvolvimento de software.
+Além da implementação funcional, também houve preocupação com a organização do código, documentação técnica e adoção de boas práticas de desenvolvimento de software.
