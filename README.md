@@ -9,6 +9,12 @@
 ![Status](https://img.shields.io/badge/Status-Concluído-success)
 
 ---
+DHT sensor library — Adafruit
+Adafruit Unified Sensor
+WiFi — incluída no pacote ESP32
+WebServer — incluída no pacote ESP32
+HTTPClient — incluída no pacote ESP32
+WiFiClientSecure — incluída no pacote ESP32
 
 # 📖 Sobre o projeto
 
